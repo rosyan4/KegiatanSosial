@@ -30,7 +30,6 @@ class NotificationController extends Controller
     {
         $users = User::warga()->active()->get();
         $activities = Activity::upcoming()->published()->get();
-        
         return view('admin.notifications.create', compact('users', 'activities'));
     }
 
@@ -54,7 +53,7 @@ class NotificationController extends Controller
                 'title' => $validated['title'],
                 'message' => $validated['message'],
                 'user_id' => $userId,
-                'activity_id' => $validated['activity_id'],
+                'activity_id' => $validated['activity_id'] ?? null,
                 'channel' => $validated['channel'],
                 'scheduled_at' => $validated['scheduled_at'] ?? now(),
                 'data' => $validated['data'] ?? [],
@@ -89,15 +88,10 @@ class NotificationController extends Controller
             'notifications.*' => 'exists:notifications,id',
         ]);
 
-        $notifications = Notification::whereIn('id', $request->notifications)
+        Notification::whereIn('id', $request->notifications)
             ->failed()
-            ->get();
-
-        foreach ($notifications as $notification) {
-            if ($notification->canBeRetried()) {
-                $notification->retry();
-            }
-        }
+            ->get()
+            ->each->retry();
 
         return back()->with('success', 'Notifikasi gagal akan dicoba kembali.');
     }
@@ -105,47 +99,7 @@ class NotificationController extends Controller
     public function destroy(Notification $notification)
     {
         $notification->delete();
-        return back()->with('success', 'Notifikasi berhasil dihapus.');
-    }
-
-    public function sendActivityReminders(Activity $activity)
-    {
-        $users = $activity->isKhusus()
-            ? $activity->invitations()->accepted()->with('user')->get()->pluck('user')
-            : User::warga()->active()->get();
-
-        foreach ($users as $user) {
-            Notification::createActivityReminder($user->id, $activity->id, 60); // 60 minutes before
-        }
-
-        return back()->with('success', 'Pengingat kegiatan berhasil dikirim.');
-    }
-
-    public function sendInvitationReminders()
-    {
-        $pendingInvitations = \App\Models\Invitation::pending()
-            ->valid()
-            ->whereHas('activity', function($q) {
-                $q->where('start_date', '<=', now()->addDays(2));
-            })
-            ->with('user', 'activity')
-            ->get();
-
-        foreach ($pendingInvitations as $invitation) {
-            if ($invitation->needsReminder()) {
-                Notification::create([
-                    'type' => 'invitation_reminder',
-                    'title' => 'Pengingat Undangan: ' . $invitation->activity->title,
-                    'message' => 'Anda memiliki undangan yang belum dikonfirmasi. Segera beri tanggapan.',
-                    'user_id' => $invitation->user_id,
-                    'activity_id' => $invitation->activity_id,
-                    'channel' => 'web',
-                    'data' => ['invitation_id' => $invitation->id],
-                    'status' => 'pending',
-                ]);
-            }
-        }
-
-        return back()->with('success', 'Pengingat undangan berhasil dikirim.');
+        return redirect()->route('admin.notifications.index')
+            ->with('success', 'Notifikasi berhasil dihapus.');
     }
 }

@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <!-- Media & Settings -->
+                <!-- Media -->
                 <div class="col-md-4">
                     <!-- Current Featured Image -->
                     <div class="card mb-4">
@@ -90,7 +90,7 @@
                                     >
                                     <div class="mt-2">
                                         <a 
-                                            href="{{ Storage::disk('public')->url($documentation->featured_image) }}" 
+                                            href="{{ Storage::url($documentation->featured_image) }}" 
                                             target="_blank" 
                                             class="btn btn-sm btn-outline-primary"
                                         >
@@ -99,6 +99,7 @@
                                     </div>
                                 </div>
                             @endif
+
                             <div class="mb-3">
                                 <label for="featured_image" class="form-label">
                                     {{ $documentation->featured_image ? 'Ganti Gambar Utama' : 'Upload Gambar Utama' }}
@@ -131,39 +132,21 @@
                             </span>
                         </div>
                         <div class="card-body">
-                            <!-- Current Gallery Images -->
                             @if($documentation->gallery_images && count($documentation->gallery_images) > 0)
                             <div class="row g-2 mb-3">
+
                                 @foreach($documentation->gallery_images as $index => $image)
                                 <div class="col-4">
                                     <div class="position-relative">
-                                    <img 
-                                        src="{{ Storage::url($documentation->featured_image) }}" 
-                                        class="img-fluid w-100 img-thumbnail" 
-                                        style="height: 80px; object-fit: cover;"
-                                        alt="{{ $documentation->title }}"
-                                    >
-                                    
-                                    @if(Route::has('admin.documentations.removeGalleryImage'))
-                                        <a 
-                                            href="{{ route('admin.documentations.removeGalleryImage', ['documentation' => $documentation, 'imageIndex' => $index]) }}" 
-                                            class="btn btn-sm btn-danger position-absolute top-0 end-0"
-                                            onclick="return confirm('Yakin ingin menghapus gambar ini?')"
+                                        <img 
+                                            src="{{ Storage::url($image) }}" 
+                                            class="img-fluid w-100 img-thumbnail" 
+                                            style="height: 80px; object-fit: cover;"
                                         >
-                                            <i class="fas fa-times"></i>
-                                        </a>
-                                    @else
-                                        <button 
-                                            type="button" 
-                                            class="btn btn-sm btn-danger position-absolute top-0 end-0"
-                                            onclick="alert('Fitur hapus gambar belum tersedia')"
-                                        >
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    @endif
-                                </div>
+                                    </div>
                                 </div>
                                 @endforeach
+
                             </div>
                             @else
                             <p class="text-muted text-center mb-3">Belum ada foto di galeri</p>
@@ -188,42 +171,6 @@
                         </div>
                     </div>
 
-                    <!-- Publication Settings -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Pengaturan Publikasi</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3 form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="is_published" 
-                                       name="is_published" value="1" 
-                                       {{ old('is_published', $documentation->is_published) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="is_published">
-                                    <strong>Publikasikan</strong>
-                                </label>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="published_at" class="form-label">Jadwal Publikasi</label>
-                                <input type="datetime-local" class="form-control @error('published_at') is-invalid @enderror" 
-                                       id="published_at" name="published_at" 
-                                       value="{{ old('published_at', $documentation->published_at ? $documentation->published_at->format('Y-m-d\TH:i') : '') }}">
-                                @error('published_at')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Status Saat Ini:</strong> 
-                                @if($documentation->is_published)
-                                    <span class="badge bg-success">Published</span>
-                                @else
-                                    <span class="badge bg-secondary">Draft</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -232,15 +179,12 @@
                 <a href="{{ route('admin.documentations.index') }}" class="btn btn-secondary">
                     <i class="fas fa-times me-2"></i> Batal
                 </a>
-                <div class="btn-group">
-                    <button type="submit" name="draft" value="1" class="btn btn-outline-secondary">
-                        <i class="fas fa-save me-2"></i> Simpan Draft
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-check me-2"></i> Update
-                    </button>
-                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check me-2"></i> Update
+                </button>
             </div>
+
         </form>
     </div>
 </div>
@@ -294,16 +238,8 @@
             }
         });
 
-        // Remove gallery preview image
         window.removeGalleryPreview = function(button) {
             $(button).closest('.position-relative').remove();
-        }
-
-        // Set default published_at if empty
-        if (!$('#published_at').val()) {
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            $('#published_at').val(now.toISOString().slice(0, 16));
         }
     });
 </script>

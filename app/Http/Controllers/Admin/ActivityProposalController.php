@@ -159,4 +159,19 @@ class ActivityProposalController extends Controller
 
         return back()->with('success', 'Aksi bulk berhasil dilakukan.');
     }
+
+    public function destroy(ActivityProposal $proposal)
+    {
+        if ($proposal->convertedActivity) {
+            return redirect()
+                ->route('admin.proposals.index')
+                ->with('error', 'Proposal tidak dapat dihapus karena sudah dikonversi menjadi kegiatan.');
+        }
+
+        $proposal->delete();
+
+        return redirect()
+            ->route('admin.proposals.index')
+            ->with('success', 'Proposal berhasil dihapus.');
+    }
 }

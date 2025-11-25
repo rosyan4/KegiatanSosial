@@ -138,4 +138,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Documentation::class, 'created_by');
     }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()->unread();
+    }
 }

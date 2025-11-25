@@ -130,42 +130,6 @@
             </div>
         </div>
 
-        <!-- Attendance Statistics -->
-        @if($activity->requires_attendance_confirmation || $activity->isCompleted())
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Statistik Kehadiran</h5>
-            </div>
-            <div class="card-body">
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <h3 class="text-primary">{{ $attendanceStats['total'] ?? 0 }}</h3>
-                            <small class="text-muted">Total Konfirmasi</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <h3 class="text-success">{{ $attendanceStats['hadir'] ?? 0 }}</h3>
-                            <small class="text-muted">Hadir</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <h3 class="text-danger">{{ $attendanceStats['tidak_hadir'] ?? 0 }}</h3>
-                            <small class="text-muted">Tidak Hadir</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="border rounded p-3">
-                            <h3 class="text-warning">{{ $attendanceStats['mungkin'] ?? 0 }}</h3>
-                            <small class="text-muted">Mungkin</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
 
         <!-- Invitations (for khusus type) -->
         @if($activity->isKhusus())

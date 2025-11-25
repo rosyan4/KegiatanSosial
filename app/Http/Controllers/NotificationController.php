@@ -12,28 +12,12 @@ class NotificationController extends Controller
     {
         $user = Auth::user();
         
-        $notifications = Notification::with(['activity', 'relatedUser'])
+        $notifications = Notification::with(['activity'])
             ->forUser($user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
         return view('notifications.index', compact('notifications'));
-    }
-
-    public function show(Notification $notification)
-    {
-        if ($notification->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        // Mark as read when viewing
-        if ($notification->isUnread()) {
-            $notification->markAsRead();
-        }
-
-        $notification->load(['activity', 'relatedUser']);
-
-        return view('notifications.show', compact('notification'));
     }
 
     public function markAllAsRead()
@@ -53,7 +37,20 @@ class NotificationController extends Controller
             abort(403);
         }
 
-        $notification->markAsRead();
+        if ($notification->isUnread()) {
+            $notification->markAsRead();
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function markAsUnread(Notification $notification)
+    {
+        if ($notification->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $notification->markAsUnread();
 
         return response()->json(['success' => true]);
     }

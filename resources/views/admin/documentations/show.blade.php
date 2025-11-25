@@ -12,24 +12,6 @@
             <a href="{{ route('admin.documentations.edit', $documentation) }}" class="btn btn-warning">
                 <i class="fas fa-edit me-2"></i> Edit
             </a>
-            
-            @if($documentation->is_published && Route::has('admin.documentations.unpublish'))
-            <form action="{{ route('admin.documentations.unpublish', $documentation) }}" method="POST" class="d-inline">
-                @csrf
-                <button type="submit" class="btn btn-secondary" 
-                        onclick="return confirm('Yakin ingin unpublish dokumentasi ini?')">
-                    <i class="fas fa-eye-slash me-2"></i> Unpublish
-                </button>
-            </form>
-            @elseif(!$documentation->is_published && Route::has('admin.documentations.publish'))
-            <form action="{{ route('admin.documentations.publish', $documentation) }}" method="POST" class="d-inline">
-                @csrf
-                <button type="submit" class="btn btn-success" 
-                        onclick="return confirm('Yakin ingin publish dokumentasi ini?')">
-                    <i class="fas fa-check me-2"></i> Publish
-                </button>
-            </form>
-            @endif
         </div>
         <a href="{{ route('admin.documentations.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left me-2"></i> Kembali
@@ -86,12 +68,12 @@
                     @foreach($documentation->gallery_images as $index => $image)
                     <div class="col-md-4 col-sm-6">
                         <div class="gallery-item position-relative">
-                            <img src="{{ Storage::url($documentation->featured_image) }}"  
-                                 class="img-thumbnail w-100 cursor-pointer"
+                            <img src="{{ Storage::url($image) }}"  
+                                 class="img-thumbnail w-100"
                                  style="height: 200px; object-fit: cover; cursor: pointer;"
                                  data-bs-toggle="modal" 
                                  data-bs-target="#galleryModal"
-                                 data-image-src="{{ Storage::disk('public')->url($image) }}"
+                                 data-image-src="{{ Storage::url($image) }}"
                                  data-image-index="{{ $index }}">
                         </div>
                     </div>
@@ -133,49 +115,16 @@
                         <td>{{ $documentation->activity->location }}</td>
                     </tr>
                 </table>
+
                 @if(Route::has('admin.activities.show'))
                 <a href="{{ route('admin.activities.show', $documentation->activity) }}" class="btn btn-sm btn-outline-primary w-100">
                     <i class="fas fa-external-link-alt me-1"></i> Lihat Kegiatan
                 </a>
                 @endif
+
                 @else
                 <p class="text-muted mb-0">Tidak ada informasi kegiatan terkait.</p>
                 @endif
-            </div>
-        </div>
-
-        <!-- Publication Status -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Status Publikasi</h5>
-            </div>
-            <div class="card-body">
-                <div class="text-center mb-3">
-                    @if($documentation->is_published)
-                        @if($documentation->published_at > now())
-                        <span class="badge bg-warning fs-6">
-                            <i class="fas fa-clock me-1"></i> Terjadwal
-                        </span>
-                        <p class="text-muted mt-2 mb-1">
-                            Akan dipublikasikan pada:<br>
-                            <strong>{{ $documentation->published_at->format('d F Y H:i') }}</strong>
-                        </p>
-                        @else
-                        <span class="badge bg-success fs-6">
-                            <i class="fas fa-check me-1"></i> Published
-                        </span>
-                        <p class="text-muted mt-2 mb-1">
-                            Dipublikasikan pada:<br>
-                            <strong>{{ $documentation->published_at->format('d F Y H:i') }}</strong>
-                        </p>
-                        @endif
-                    @else
-                        <span class="badge bg-secondary fs-6">
-                            <i class="fas fa-edit me-1"></i> Draft
-                        </span>
-                        <p class="text-muted mt-2">Dokumentasi belum dipublikasikan.</p>
-                    @endif
-                </div>
             </div>
         </div>
 
@@ -228,6 +177,7 @@
                     <a href="{{ route('admin.documentations.edit', $documentation) }}" class="btn btn-warning">
                         <i class="fas fa-edit me-2"></i> Edit Dokumentasi
                     </a>
+
                     @if(Route::has('admin.documentations.destroy'))
                     <form action="{{ route('admin.documentations.destroy', $documentation) }}" method="POST" class="d-grid">
                         @csrf
@@ -297,49 +247,30 @@
         const galleryImages = @json($documentation->gallery_images);
         let currentImageIndex = 0;
 
-        // Gallery modal functionality
         $('#galleryModal').on('show.bs.modal', function (event) {
             const button = $(event.relatedTarget);
-            const imageSrc = button.data('image-src');
             currentImageIndex = button.data('image-index');
-            
-            $('#modalImage').attr('src', imageSrc);
+            $('#modalImage').attr('src', button.data('image-src'));
             updateImageCounter();
         });
 
-        // Previous image
         $('#prevImage').click(function() {
             currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
             showImage(currentImageIndex);
         });
 
-        // Next image
         $('#nextImage').click(function() {
             currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
             showImage(currentImageIndex);
         });
 
-        // Keyboard navigation
-        $(document).keydown(function(e) {
-            if ($('#galleryModal').is(':visible')) {
-                if (e.key === 'ArrowLeft') {
-                    $('#prevImage').click();
-                } else if (e.key === 'ArrowRight') {
-                    $('#nextImage').click();
-                } else if (e.key === 'Escape') {
-                    $('#galleryModal').modal('hide');
-                }
-            }
-        });
-
         function showImage(index) {
-            const imageUrl = '{{ Storage::disk("public")->url("") }}' + galleryImages[index];
-            $('#modalImage').attr('src', imageUrl);
+            $('#modalImage').attr('src', '{{ Storage::url("") }}' + galleryImages[index]);
             updateImageCounter();
         }
 
         function updateImageCounter() {
-            $('#imageCounter').text(`${currentImageIndex + 1} / ${galleryImages.length}`);
+            $('#imageCounter').text((currentImageIndex + 1) + ' / ' + galleryImages.length);
         }
     });
 </script>

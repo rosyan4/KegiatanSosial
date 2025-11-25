@@ -48,10 +48,5 @@
                 <i class="fas fa-users me-2"></i> Manajemen User
             </a>
         </li>
-        <li>
-            <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
-                <i class="fas fa-cog me-2"></i> Pengaturan
-            </a>
-        </li>
     </ul>
 </div>

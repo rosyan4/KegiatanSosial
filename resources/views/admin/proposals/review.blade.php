@@ -190,7 +190,7 @@
                 <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Minta Revisi</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('admin.proposals.requestRevision', $proposal) }}" method="POST" id="revisionForm">
+                <form action="{{ route('admin.proposals.request-revision', $proposal->id) }}" method="POST" id="revisionForm">
                     @csrf
                     
                     <div class="mb-3">

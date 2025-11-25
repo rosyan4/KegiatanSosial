@@ -134,13 +134,6 @@
                     </div>
                 </div>
                 @endif
-
-                @if($notification->data)
-                <div class="mt-4">
-                    <h6 class="text-muted">Data Tambahan:</h6>
-                    <pre class="bg-dark text-light p-3 rounded"><code>{{ json_encode($notification->data, JSON_PRETTY_PRINT) }}</code></pre>
-                </div>
-                @endif
             </div>
         </div>
     </div>

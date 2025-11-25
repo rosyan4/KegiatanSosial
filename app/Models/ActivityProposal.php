@@ -268,4 +268,16 @@ class ActivityProposal extends Model
     {
         return !is_null($this->convertedActivity);
     }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'proposal_id');
+    }
+
+    public function isPendingRevision(): bool
+    {
+        return $this->status === 'need_revision';
+    }
+
 }
+

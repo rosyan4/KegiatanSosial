@@ -161,27 +161,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Additional Data -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Data Tambahan</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label for="data" class="form-label">Data JSON (Opsional)</label>
-                                <textarea class="form-control @error('data') is-invalid @enderror" 
-                                          id="data" name="data" rows="3" 
-                                          placeholder='{"key": "value"}'>{{ old('data') }}</textarea>
-                                @error('data')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">
-                                    Data tambahan dalam format JSON (untuk keperluan sistem).
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 

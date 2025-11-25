@@ -43,6 +43,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('proposals/{proposal}/reject', [ActivityProposalController::class, 'reject'])->name('proposals.reject');
     Route::post('proposals/{proposal}/request-revision', [ActivityProposalController::class, 'requestRevision'])->name('proposals.request-revision');
     Route::post('proposals/bulk-action', [ActivityProposalController::class, 'bulkAction'])->name('proposals.bulk-action');
+    Route::delete('/proposals/{proposal}', [ActivityProposalController::class, 'destroy'])->name('proposals.destroy');
 
     // Documentations
     Route::resource('documentations', DocumentationController::class);
@@ -62,13 +63,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('attendance-reports', [AttendanceController::class, 'reports'])->name('attendance.reports');
 
     // Notifications
+    Route::resource('notifications', NotificationController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+    // Retry 1 notifikasi
     Route::post('notifications/{notification}/retry', [NotificationController::class, 'retry'])->name('notifications.retry');
-    Route::post('notifications/bulk-retry', [NotificationController::class, 'bulkRetry'])->name('notifications.bulk-retry');
-    Route::post('notifications/{activity}/send-reminders', [NotificationController::class, 'sendActivityReminders'])->name('notifications.send-reminders');
-    Route::post('notifications/send-invitation-reminders', [NotificationController::class, 'sendInvitationReminders'])->name('notifications.send-invitation-reminders');
-
-    Route::resource('notifications', NotificationController::class)->except(['edit', 'update']);
-
+    // Retry banyak notifikasi sekaligus
+    Route::post('notifications/bulk-retry', [NotificationController::class, 'bulkRetry'])->name('notifications.bulkRetry');
 
     // Settings
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');

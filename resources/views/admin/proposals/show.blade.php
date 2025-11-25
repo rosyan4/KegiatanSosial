@@ -14,7 +14,7 @@
             @endif
             
             @if($proposal->isPending())
-                <form action="{{ route('admin.proposals.markUnderReview', $proposal) }}" method="POST" class="d-inline">
+                <form action="{{ route('admin.proposals.mark-under-review', $proposal->id) }}" method="POST" class="d-inline">
                     @csrf
                     <button type="submit" class="btn btn-primary" onclick="return confirm('Tandai proposal sedang direview?')">
                         <i class="fas fa-play me-2"></i> Mulai Review
@@ -49,14 +49,17 @@
                                             'under_review' => 'info',
                                             'approved' => 'success',
                                             'rejected' => 'danger',
-                                            'pending_revision' => 'secondary'
+                                            'pending_revision' => 'secondary',
+                                            'need_revision' => 'secondary'
                                         ];
+
                                         $statusLabels = [
                                             'pending' => 'Menunggu Review',
                                             'under_review' => 'Sedang Direview',
                                             'approved' => 'Disetujui',
                                             'rejected' => 'Ditolak',
-                                            'pending_revision' => 'Menunggu Revisi'
+                                            'pending_revision' => 'Menunggu Revisi',
+                                            'need_revision' => 'Menunggu Revisi'
                                         ];
                                     @endphp
                                     <span class="badge bg-{{ $statusColors[$proposal->status] }} fs-6">
@@ -251,7 +254,7 @@
                     @endif
 
                     @if($proposal->isPending())
-                        <form action="{{ route('admin.proposals.markUnderReview', $proposal) }}" method="POST">
+                        <form action="{{ route('admin.proposals.mark-under-review', $proposal->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-primary w-100" onclick="return confirm('Tandai proposal sedang direview?')">
                                 <i class="fas fa-play me-2"></i> Mulai Review

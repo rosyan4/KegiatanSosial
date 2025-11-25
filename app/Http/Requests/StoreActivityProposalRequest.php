@@ -11,13 +11,13 @@ class StoreActivityProposalRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array
+   public function rules(): array
     {
         return [
             'title' => 'required|string|max:255',
-            'description' => 'required|string|min:10',
-            'objectives' => 'required|string|min:10',
-            'benefits' => 'required|string|min:10',
+            'description' => 'required|string',
+            'objectives' => 'required|string',
+            'benefits' => 'required|string',
             'proposed_date' => 'required|date|after:today',
             'proposed_location' => 'required|string|max:255',
             'estimated_participants' => 'required|integer|min:1',

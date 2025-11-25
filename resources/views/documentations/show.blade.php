@@ -5,17 +5,19 @@
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-8">
+
         <!-- Documentation Header -->
         <div class="text-center mb-4">
             <h1 class="h2">{{ $documentation->title }}</h1>
+
             <div class="text-muted mb-3">
                 <i class="fas fa-calendar me-1"></i>
-                Dipublikasikan pada {{ $documentation->published_at->format('d F Y') }}
-                &bull; 
+                Dipublikasikan pada {{ $documentation->created_at->format('d F Y') }}
+                &bull;
                 <i class="fas fa-eye me-1"></i>
                 {{ $documentation->view_count }} dilihat
             </div>
-            
+
             @if($documentation->activity)
             <div class="mb-3">
                 <a href="{{ route('activities.show', $documentation->activity) }}" 
@@ -31,7 +33,8 @@
         @if($documentation->featured_image)
         <div class="card mb-4">
             <img src="{{ Storage::url($documentation->featured_image) }}" 
-                 class="card-img-top" alt="{{ $documentation->title }}">
+                 class="card-img-top" 
+                 alt="{{ $documentation->title }}">
         </div>
         @endif
 
@@ -48,18 +51,22 @@
         <div class="card">
             <div class="card-body">
                 <div class="row text-center">
-                    <div class="col-md-4">
+
+                    <div class="col-md-4 mb-3 mb-md-0">
                         <strong><i class="fas fa-user me-1 text-success"></i>Penulis</strong>
-                        <p class="mb-0">{{ $documentation->creator->name }}</p>
+                        <p class="mb-0">{{ $documentation->creator->name ?? 'Tidak diketahui' }}</p>
                     </div>
-                    <div class="col-md-4">
+
+                    <div class="col-md-4 mb-3 mb-md-0">
                         <strong><i class="fas fa-calendar me-1 text-primary"></i>Tanggal Publikasi</strong>
-                        <p class="mb-0">{{ $documentation->published_at->format('d M Y H:i') }}</p>
+                        <p class="mb-0">{{ $documentation->created_at->format('d M Y H:i') }}</p>
                     </div>
+
                     <div class="col-md-4">
                         <strong><i class="fas fa-eye me-1 text-info"></i>Dilihat</strong>
                         <p class="mb-0">{{ $documentation->view_count }} kali</p>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -70,6 +77,7 @@
                 <i class="fas fa-arrow-left me-1"></i>Kembali ke Dokumentasi
             </a>
         </div>
+
     </div>
 </div>
 

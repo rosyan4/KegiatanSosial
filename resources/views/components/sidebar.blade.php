@@ -66,6 +66,13 @@ try {
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}" 
+                   href="{{ route('notifications.index') }}">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifikasi</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}" 
                    href="{{ route('reports.attendance') }}">
                     <i class="fas fa-chart-bar"></i>
                     <span>Laporan</span>

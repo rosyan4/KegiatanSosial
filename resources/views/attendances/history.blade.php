@@ -7,34 +7,6 @@
     <h1 class="h2">Riwayat Kehadiran</h1>
 </div>
 
-<!-- Stats -->
-<div class="row mb-4">
-    <div class="col-md-4 mb-3">
-        <div class="card bg-primary text-white">
-            <div class="card-body text-center">
-                <h3>{{ $attendanceStats['total'] }}</h3>
-                <p class="mb-0">Total Konfirmasi</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card bg-success text-white">
-            <div class="card-body text-center">
-                <h3>{{ $attendanceStats['hadir'] }}</h3>
-                <p class="mb-0">Hadir</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card bg-danger text-white">
-            <div class="card-body text-center">
-                <h3>{{ $attendanceStats['tidak_hadir'] }}</h3>
-                <p class="mb-0">Tidak Hadir</p>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Attendance History -->
 <div class="card">
     <div class="card-header">
