@@ -10,12 +10,10 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        
-        $notifications = Notification::with(['activity'])
-            ->forUser($user->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        $notifications = \App\Models\Notification::where('user_id', auth()->id())
+            ->where('scheduled_at', '<=', now())
+            ->orderBy('scheduled_at', 'desc')
+            ->paginate(10);
 
         return view('notifications.index', compact('notifications'));
     }

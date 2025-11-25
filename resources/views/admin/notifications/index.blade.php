@@ -21,7 +21,7 @@
                     <th>Penerima</th>
                     <th>Judul</th>
                     <th>Channel</th>
-                    <th>Status</th>
+                    <th>Jadwal Kirim</th>
                     <th>Dibuat</th>
                     <th width="130">Aksi</th>
                 </tr>
@@ -33,27 +33,13 @@
                     <td>{{ $notification->user->name ?? 'System' }}</td>
                     <td>{{ $notification->title }}</td>
                     <td>{{ ucfirst($notification->channel) }}</td>
-                    <td>
-                        <span class="badge bg-{{ $notification->status == 'failed' ? 'danger' : ($notification->status == 'sent' ? 'success' : 'warning') }}">
-                            {{ ucfirst($notification->status) }}
-                        </span>
-                    </td>
+                    <td>{{ $notification->scheduled_at->format('d/m/Y H:i') }}</td>
                     <td>{{ $notification->created_at->format('d/m/Y H:i') }}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a href="{{ route('admin.notifications.show', $notification) }}" class="btn btn-info">
                                 <i class="fas fa-eye"></i>
                             </a>
-
-                            {{-- Retry jika status FAILED --}}
-                            @if($notification->status === 'failed')
-                            <form action="{{ route('admin.notifications.retry', $notification) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button onclick="return confirm('Retry notifikasi?')" class="btn btn-warning">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </form>
-                            @endif
 
                             <form action="{{ route('admin.notifications.destroy', $notification->id) }}" method="POST" class="d-inline">
                                 @csrf
