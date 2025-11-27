@@ -14,85 +14,6 @@
     </div>
 </div>
 
-<!-- Overall Statistics -->
-<div class="row mb-4">
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Total Kegiatan</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {{ $overallStats['total_activities'] ?? 0 }}
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Total Partisipasi</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {{ $overallStats['total_participations'] ?? 0 }}
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-users fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                            Rata-rata Kehadiran</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {{ number_format($overallStats['average_attendance_rate'] ?? 0, 1) }}%
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-percentage fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Total Hadir + Tamu</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {{ $overallStats['total_attendees'] ?? 0 }}
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-user-friends fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Filters Card -->
 <div class="card mb-4">
     <div class="card-header">
@@ -155,7 +76,7 @@
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered">
-                <thead class="table-dark">
+                <thead class="table-light">
                     <tr>
                         <th width="60">#</th>
                         <th>Kegiatan</th>

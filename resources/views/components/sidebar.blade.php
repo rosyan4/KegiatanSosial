@@ -65,7 +65,7 @@ try {
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}" 
+                <a class="nav-link {{ request()->routeIs('notifications.*') ? 'active' : '' }}" 
                    href="{{ route('notifications.index') }}">
                     <i class="fas fa-bell"></i>
                     <span>Notifikasi</span>
@@ -83,103 +83,147 @@ try {
 </div>
 
 <style>
-    /* Sidebar Styles - Konsisten dengan Layout */
+    /* Sidebar Styles - Modern Flat Design Matching Guest */
     .sidebar {
         background-color: #ffffff !important;
-        border-right: 1px solid var(--border-color, #e2e8f0);
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        border-right: 2px solid #f1f5f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .sidebar .nav {
-        gap: 0.25rem;
+        gap: 0.375rem;
     }
 
     .sidebar .nav-item {
-        margin-bottom: 0.125rem;
+        margin-bottom: 0.25rem;
     }
 
     .sidebar .nav-link {
-        color: #1e293b !important;
-        font-weight: 500;
-        font-size: 0.9rem;
-        padding: 0.75rem 1rem;
-        border-radius: 10px;
-        transition: all 0.2s ease;
+        color: #1a1a1a !important;
+        font-weight: 600;
+        font-size: 0.925rem;
+        padding: 0.875rem 1.25rem;
+        border-radius: 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 0.875rem;
         position: relative;
+        border: 2px solid transparent;
     }
 
     .sidebar .nav-link i {
-        width: 20px;
+        width: 22px;
         text-align: center;
-        font-size: 1rem;
-        color: #64748b !important;
-        transition: all 0.2s ease;
+        font-size: 1.1rem;
+        color: #6b7280 !important;
+        transition: all 0.3s ease;
     }
 
     .sidebar .nav-link span {
         flex: 1;
-        color: #1e293b !important;
+        color: #1a1a1a !important;
+        transition: all 0.3s ease;
     }
 
     .sidebar .nav-link:hover {
-        background-color: #f1f5f9;
-        color: var(--primary-color, #3b82f6) !important;
-        transform: translateX(4px);
+        background-color: #fff7ed;
+        color: #f97316 !important;
+        transform: translateX(5px);
+        border-color: transparent;
     }
 
     .sidebar .nav-link:hover i {
-        color: var(--primary-color, #3b82f6) !important;
+        color: #f97316 !important;
+        transform: scale(1.1);
     }
 
     .sidebar .nav-link:hover span {
-        color: var(--primary-color, #3b82f6) !important;
+        color: #f97316 !important;
     }
 
     .sidebar .nav-link.active {
-        background-color: #eff6ff;
-        color: var(--primary-color, #3b82f6) !important;
-        font-weight: 600;
-        border-left: 4px solid var(--primary-color, #3b82f6);
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+        background-color: #fff7ed;
+        color: #f97316 !important;
+        font-weight: 700;
+        border-left: 4px solid #f97316;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+        transform: translateX(2px);
     }
 
     .sidebar .nav-link.active i {
-        color: var(--primary-color, #3b82f6) !important;
+        color: #f97316 !important;
     }
 
     .sidebar .nav-link.active span {
-        color: var(--primary-color, #3b82f6) !important;
+        color: #f97316 !important;
     }
 
     .sidebar .badge {
         font-size: 0.7rem;
-        font-weight: 600;
-        padding: 0.25rem 0.5rem;
+        font-weight: 700;
+        padding: 0.3rem 0.55rem;
         margin-left: auto;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
     }
 
     .sidebar .badge.rounded-pill {
-        min-width: 20px;
+        min-width: 22px;
         text-align: center;
+    }
+
+    .sidebar .badge.bg-danger {
+        background-color: #ef4444 !important;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
         .sidebar {
             border-right: none;
-            border-bottom: 1px solid var(--border-color, #e2e8f0);
+            border-bottom: 2px solid #f1f5f9;
         }
 
         .sidebar .nav-link {
-            padding: 0.625rem 0.875rem;
-            font-size: 0.875rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
         }
 
         .sidebar .nav-link i {
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            transform: translateX(3px);
+        }
+    }
+
+    /* Smooth scroll behavior */
+    .sidebar .position-sticky {
+        position: sticky;
+        top: 76px;
+        max-height: calc(100vh - 76px);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #f97316 #f1f5f9;
+    }
+
+    .sidebar .position-sticky::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar .position-sticky::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 10px;
+    }
+
+    .sidebar .position-sticky::-webkit-scrollbar-thumb {
+        background: #f97316;
+        border-radius: 10px;
+    }
+
+    .sidebar .position-sticky::-webkit-scrollbar-thumb:hover {
+        background: #ea580c;
     }
 </style>

@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\ActivityCategory;
 use App\Models\User;
-use App\Models\ActivityProposal;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ActivityController extends Controller
 {
@@ -21,21 +21,18 @@ class ActivityController extends Controller
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
-        
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
-        
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
         $activities = $query->latest()->paginate(10);
-        $categories = ActivityCategory::active()->get(); // Tambahkan ini
+        $categories = ActivityCategory::active()->get();
 
         return view('admin.activities.index', compact('activities', 'categories'));
     }
@@ -50,13 +47,19 @@ class ActivityController extends Controller
 
     public function store(Request $request)
     {
+        // Parse datetime input menjadi Carbon
+        $request->merge([
+            'start_date' => Carbon::parse($request->start_date),
+            'end_date' => Carbon::parse($request->end_date),
+        ]);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:activity_categories,id',
             'type' => 'required|in:umum,khusus',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'location' => 'required|string|max:255',
             'max_participants' => 'nullable|integer|min:1',
             'requires_attendance_confirmation' => 'boolean',
@@ -65,12 +68,12 @@ class ActivityController extends Controller
             'invited_users.*' => 'exists:users,id',
         ]);
 
-        DB::transaction(function () use ($validated, $request) {
+        DB::transaction(function () use ($validated) {
             $activity = Activity::create($validated + [
                 'created_by' => auth()->id()
             ]);
 
-            // Perbaikan: Handle invitations dengan benar
+            // Handle invitations
             if ($activity->isKhusus() && isset($validated['invited_users'])) {
                 foreach ($validated['invited_users'] as $userId) {
                     if (!$activity->isUserInvited($userId)) {
@@ -112,13 +115,19 @@ class ActivityController extends Controller
 
     public function update(Request $request, Activity $activity)
     {
+        // Parse datetime input menjadi Carbon
+        $request->merge([
+            'start_date' => Carbon::parse($request->start_date),
+            'end_date' => Carbon::parse($request->end_date),
+        ]);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:activity_categories,id',
             'type' => 'required|in:umum,khusus',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'location' => 'required|string|max:255',
             'max_participants' => 'nullable|integer|min:1',
             'requires_attendance_confirmation' => 'boolean',
@@ -132,7 +141,7 @@ class ActivityController extends Controller
 
             $activity->update($validated);
 
-            // Perbaikan: Handle invitations dengan benar
+            // Handle invitations
             if ($activity->isKhusus() && isset($validated['invited_users'])) {
                 // Remove existing invitations not in new list
                 $activity->invitations()
@@ -186,7 +195,6 @@ class ActivityController extends Controller
         return back()->with('success', 'Kegiatan berhasil diselesaikan.');
     }
 
-    // PERBAIKAN: Method notifyNewActivity yang sudah diimplementasi
     private function notifyNewActivity(Activity $activity)
     {
         if ($activity->isUmum()) {

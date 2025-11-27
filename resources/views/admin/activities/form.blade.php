@@ -68,9 +68,11 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="start_date" class="form-label">Tanggal Mulai <span class="text-danger">*</span></label>
-                                <input type="datetime-local" class="form-control @error('start_date') is-invalid @enderror" 
-                                       id="start_date" name="start_date" 
-                                       value="{{ old('start_date', isset($activity) ? $activity->start_date->format('Y-m-d\TH:i') : '') }}" required>
+                                <input type="datetime-local" 
+                                    class="form-control @error('start_date') is-invalid @enderror" 
+                                    id="start_date" name="start_date"
+                                    value="{{ old('start_date', isset($activity) && $activity->start_date ? \Carbon\Carbon::parse($activity->start_date)->format('Y-m-d\TH:i') : '') }}"
+                                    required>
                                 @error('start_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -79,9 +81,11 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="end_date" class="form-label">Tanggal Selesai <span class="text-danger">*</span></label>
-                                <input type="datetime-local" class="form-control @error('end_date') is-invalid @enderror" 
-                                       id="end_date" name="end_date" 
-                                       value="{{ old('end_date', isset($activity) ? $activity->end_date->format('Y-m-d\TH:i') : '') }}" required>
+                                <input type="datetime-local" 
+                                    class="form-control @error('end_date') is-invalid @enderror" 
+                                    id="end_date" name="end_date"
+                                    value="{{ old('end_date', isset($activity) && $activity->end_date ? \Carbon\Carbon::parse($activity->end_date)->format('Y-m-d\TH:i') : '') }}"
+                                    required>
                                 @error('end_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -151,7 +155,7 @@
                     </div>
                 </div>
 
-                <!-- Invited Users (for khusus type) -->
+                <!-- Invited Users -->
                 <div class="col-md-6">
                     <div id="invited-users-section" style="{{ old('type', isset($activity) ? $activity->type : 'umum') == 'khusus' ? '' : 'display: none;' }}">
                         <h5 class="mb-3 text-primary"><i class="fas fa-users me-2"></i>Undangan Khusus</h5>
@@ -207,16 +211,16 @@
             }
         });
 
-        // Trigger change on page load to set initial state
+        // Trigger change on page load
         $('#type').trigger('change');
 
-        // Date validation
+        // Date validation (END DATE boleh sama dengan START DATE)
         $('#start_date, #end_date').change(function() {
             const startDate = new Date($('#start_date').val());
             const endDate = new Date($('#end_date').val());
             
-            if (endDate <= startDate) {
-                alert('Tanggal selesai harus setelah tanggal mulai');
+            if (endDate < startDate) {
+                alert('Tanggal selesai tidak boleh lebih awal dari tanggal mulai');
                 $('#end_date').val('');
             }
         });

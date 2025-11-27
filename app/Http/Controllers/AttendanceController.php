@@ -14,20 +14,19 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        $confirmations = AttendanceConfirmation::with(['activity.category'])
+        $confirmations = AttendanceConfirmation::with([
+                'activity.category'   // memastikan relasi activity + category dimuat
+            ])
             ->where('user_id', $user->id)
-            ->whereHas('activity', function($query) {
-                $query->where('end_date', '<', now());
-            })
             ->orderBy('confirmed_at', 'desc')
             ->paginate(15);
 
         $attendanceStats = [
             'total' => AttendanceConfirmation::where('user_id', $user->id)->count(),
             'hadir' => AttendanceConfirmation::where('user_id', $user->id)
-                        ->where('status', 'hadir')->count(),
+                        ->where('status', AttendanceConfirmation::STATUS_HADIR)->count(),
             'tidak_hadir' => AttendanceConfirmation::where('user_id', $user->id)
-                            ->where('status', 'tidak_hadir')->count(),
+                        ->where('status', AttendanceConfirmation::STATUS_TIDAK_HADIR)->count(),
         ];
 
         return view('attendances.history', compact('confirmations', 'attendanceStats'));
@@ -163,5 +162,25 @@ class AttendanceController extends Controller
             'can_check_in' => $canCheckIn,
             'can_check_out' => $canCheckOut,
         ]);
+    }
+
+    public function deleteAttendance(AttendanceLog $log)
+    {
+        if ($log->user_id !== auth()->id()) {
+            return back()->with('error', 'Anda tidak berhak menghapus data ini.');
+        }
+
+        $log->delete(); // kalau pakai SoftDeletes, otomatis soft delete
+        return back()->with('success', 'Riwayat kehadiran berhasil dihapus.');
+    }
+
+    public function deleteConfirmation(AttendanceConfirmation $confirmation)
+    {
+        if ($confirmation->user_id !== auth()->id()) {
+            return back()->with('error', 'Anda tidak berhak menghapus data ini.');
+        }
+
+        $confirmation->delete();
+        return back()->with('success', 'Konfirmasi kehadiran berhasil dihapus.');
     }
 }

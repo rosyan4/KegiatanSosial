@@ -120,35 +120,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Gallery -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-images me-2"></i>Galeri Foto</h5>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label" for="gallery_images">Upload Multiple Foto</label>
-                                <input type="file" id="gallery_images" name="gallery_images[]"
-                                       class="form-control @error('gallery_images') is-invalid @enderror @error('gallery_images.*') is-invalid @enderror"
-                                       accept="image/*" multiple>
-
-                                @error('gallery_images')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                @error('gallery_images.*')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-
-                                <div class="form-text">Maksimal 2MB per file.</div>
-                            </div>
-
-                            <!-- Preview -->
-                            <div id="galleryPreview" class="mt-3"></div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 

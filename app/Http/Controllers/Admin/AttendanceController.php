@@ -229,4 +229,16 @@ class AttendanceController extends Controller
             }),
         ];
     }
+
+    public function deleteHistory(Activity $activity)
+    {
+        // Hapus semua log kehadiran untuk activity ini
+        $activity->attendanceLogs()->delete();
+
+        // Hapus semua konfirmasi kehadiran untuk activity ini
+        $activity->attendanceConfirmations()->delete();
+
+        return redirect()->back()->with('success', 'Riwayat kehadiran berhasil dihapus.');
+    }
+
 }

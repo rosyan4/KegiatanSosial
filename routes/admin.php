@@ -52,15 +52,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::delete('documentations/{documentation}/gallery/{imageIndex}', [DocumentationController::class, 'removeGalleryImage'])->name('documentations.remove-gallery-image');
 
     // Attendance
-    Route::get('attendance', [AttendanceController::class, 'index'])->name('attendance.index');
-    Route::get('attendance/{activity}', [AttendanceController::class, 'showActivity'])->name('attendance.show');
-    Route::post('attendance/{activity}/manual-checkin', [AttendanceController::class, 'manualCheckIn'])->name('attendance.manual-checkin');
-    Route::post('attendance/logs/{log}/manual-checkout', [AttendanceController::class, 'manualCheckOut'])->name('attendance.manual-checkout');
-    Route::post('attendance/confirmations/{confirmation}/update', [AttendanceController::class, 'updateConfirmation'])->name('attendance.update-confirmation');
-    Route::post('attendance/logs/{log}/verify', [AttendanceController::class, 'verifyAttendance'])->name('attendance.verify');
-    Route::post('attendance/{activity}/mark', [AttendanceController::class, 'markAttendance'])->name('attendance.mark');
-    Route::get('attendance/{activity}/export', [AttendanceController::class, 'exportAttendance'])->name('attendance.export');
-    Route::get('attendance-reports', [AttendanceController::class, 'reports'])->name('attendance.reports');
+    Route::prefix('attendance')->name('attendance.')->group(function () {
+        Route::get('/', [AttendanceController::class, 'index'])->name('index');
+        Route::get('/reports', [AttendanceController::class, 'reports'])->name('reports');
+        Route::get('/activity/{activity}', [AttendanceController::class, 'showActivity'])->name('show');
+        Route::post('/activity/{activity}/manual-checkin', [AttendanceController::class, 'manualCheckIn'])->name('manual-checkin');
+        Route::post('/logs/{log}/manual-checkout', [AttendanceController::class, 'manualCheckOut'])->name('manual-checkout');
+        Route::put('/confirmations/{confirmation}', [AttendanceController::class, 'updateConfirmation'])->name('updateConfirmation');
+        Route::post('/logs/{log}/verify', [AttendanceController::class, 'verifyAttendance'])->name('verify');
+        Route::post('/activity/{activity}/mark', [AttendanceController::class, 'markAttendance'])->name('mark');
+        Route::get('/activity/{activity}/export', [AttendanceController::class, 'exportAttendance'])->name('export');
+        Route::delete('/activity/{activity}/history/delete', [AttendanceController::class, 'deleteHistory'])->name('deleteHistory');
+    });
+
 
     // Notifications
     Route::resource('notifications', NotificationController::class)->only(['index', 'create', 'store', 'show', 'destroy']);

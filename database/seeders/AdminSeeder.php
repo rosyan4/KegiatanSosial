@@ -17,12 +17,12 @@ class AdminSeeder extends Seeder
         // Hanya satu admin utama
         User::create([
             'name' => 'Administrator',
-            'email' => 'admin@gmail.com',
-            'phone' => '081234567890',
-            'password' => Hash::make('password123'),
+            'email' => 'rosyanassiry14@gmail.com',
+            'phone' => '0895618417641',
+            'password' => Hash::make('ahmadrosyan'),
             'role' => 'admin',
-            'address' => 'Kantor RT/RW',
-            'rt' => '01',
+            'address' => 'Kantor RT',
+            'rt' => '04',
             'rw' => '01',
             'profile_photo' => null,
             'is_active' => true,
@@ -31,7 +31,7 @@ class AdminSeeder extends Seeder
         ]);
 
         $this->command->info('✅ Admin berhasil dibuat!');
-        $this->command->info('📧 Email: admin@gmail.com');
-        $this->command->info('🔑 Password: password123');
+        $this->command->info('📧 Email: rosyanassiry14@gmail.com');
+        $this->command->info('🔑 Password: ahmadrosyan');
     }
 }

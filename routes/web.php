@@ -37,6 +37,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/activities/{activity}/check-in', [AttendanceController::class, 'checkIn'])->name('attendances.check-in');
     Route::post('/activities/{activity}/check-out', [AttendanceController::class, 'checkOut'])->name('attendances.check-out');
     Route::get('/activities/{activity}/attendance-status', [AttendanceController::class, 'getAttendanceStatus'])->name('activities.attendance-status');
+    Route::delete('/attendance/{log}/delete', [AttendanceController::class, 'deleteAttendance'])->name('attendance.delete');
+    Route::delete('/attendance/confirmation/{confirmation}/delete', [AttendanceController::class, 'deleteConfirmation'])->name('attendance.confirmation.delete');
 
     // Calendar
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
